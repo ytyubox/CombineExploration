@@ -154,15 +154,15 @@ class ConcurrencyTests: XCTestCase {
 		
 		print("Phase 2...")
 		RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.001))
-		XCTAssertEqual(received, [].asEvents(completion: nil))
+		XCTAssertEqual(received, [1].asEvents(completion: nil))
 		
 		print("Phase 3...")
 		subject.send(2)
-		XCTAssertEqual(received, [].asEvents(completion: nil))
+		XCTAssertEqual(received, [1].asEvents(completion: nil))
 		
 		print("Phase 4...")
 		RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.001))
-		XCTAssertEqual(received, [2].asEvents(completion: nil))
+		XCTAssertEqual(received, [1, 2].asEvents(completion: nil))
 		
 		cancellable.cancel()
 	}
@@ -209,7 +209,7 @@ class ConcurrencyTests: XCTestCase {
 		queue.async { subject.send(completion: .finished) }
 		wait(for: [e], timeout: 5.0)
 
-		XCTAssertEqual(received, [].asEvents(completion: .finished))
+		XCTAssertEqual(received, [1].asEvents(completion: .finished))
 		
 		c.cancel()
 	}
